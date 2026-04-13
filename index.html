@@ -131,6 +131,27 @@
     color: var(--ink-muted);
     line-height: 1.65;
   }
+  .how-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .how-item:last-child { margin-bottom: 0; }
+  .how-num {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 50%;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
 
   .panel-label {
     font-family: var(--font-mono);
@@ -488,6 +509,15 @@
     <div class="info-card">
       <div class="info-card-title">⊞ 아이젠하워 매트릭스란?</div>
       <div class="info-card-body">미국 34대 대통령 아이젠하워가 쓴 우선순위 결정 도구예요. 할 일을 <strong>긴급도 × 중요도</strong>로 나눠 4분면에 배치하면 무엇을 먼저 해야 할지 한눈에 보여요.</div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">💡 사용법</div>
+      <div class="info-card-body">
+        <div class="how-item"><span class="how-num">1</span><span>입력창에 할 일을 적고 <strong>Enter</strong> — 미분류 목록에 추가돼요.</span></div>
+        <div class="how-item"><span class="how-num">2</span><span>칩을 <strong>드래그 앤 드롭</strong>해서 오른쪽 매트릭스 4분면에 분류하세요.</span></div>
+        <div class="how-item"><span class="how-num">3</span><span>칩을 <strong>더블클릭</strong>하면 텍스트를 수정할 수 있어요. Enter로 저장, Esc로 취소.</span></div>
+        <div class="how-item"><span class="how-num">4</span><span>✕ 버튼으로 삭제, 분류 후에도 다시 드래그해서 위치를 바꿀 수 있어요.</span></div>
+      </div>
     </div>
   </div>
 
