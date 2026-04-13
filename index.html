@@ -278,6 +278,7 @@
   }
   .chip:hover { box-shadow: 0 2px 6px rgba(0,0,0,.08); }
   .chip.dragging { opacity: .4; }
+  .chip.drag-target { border-style: dashed; opacity: .7; transform: translateY(-2px); }
   .chip span.text { flex: 1; word-break: break-word; }
   .chip .del {
     flex-shrink: 0;
@@ -648,6 +649,8 @@
     return { q1:'q1-chip', q2:'q2-chip', q3:'q3-chip', q4:'q4-chip' }[loc] || '';
   }
 
+  let dragOverId = null; // id of chip being hovered over
+
   function attachEvents(container, loc) {
     container.querySelectorAll('.chip').forEach(el => {
       el.addEventListener('dragstart', e => {
@@ -658,7 +661,37 @@
       });
       el.addEventListener('dragend', () => {
         el.classList.remove('dragging');
+        document.querySelectorAll('.chip.drag-target').forEach(c => c.classList.remove('drag-target'));
         dragId = null;
+        dragOverId = null;
+      });
+      // reorder: dragover a chip
+      el.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!dragId || dragId === el.dataset.id) return;
+        if (dragOverId !== el.dataset.id) {
+          document.querySelectorAll('.chip.drag-target').forEach(c => c.classList.remove('drag-target'));
+          el.classList.add('drag-target');
+          dragOverId = el.dataset.id;
+        }
+      });
+      el.addEventListener('drop', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        el.classList.remove('drag-target');
+        if (!dragId || dragId === el.dataset.id) return;
+        const fromIdx = tasks.findIndex(t => t.id === dragId);
+        const toIdx   = tasks.findIndex(t => t.id === el.dataset.id);
+        if (fromIdx === -1 || toIdx === -1) return;
+        // move task to same loc and reorder
+        const [moved] = tasks.splice(fromIdx, 1);
+        moved.loc = tasks[toIdx < tasks.length ? toIdx : tasks.length - 1]?.loc || moved.loc;
+        // recalc toIdx after splice
+        const newToIdx = tasks.findIndex(t => t.id === el.dataset.id);
+        tasks.splice(newToIdx, 0, moved);
+        dragOverId = null;
+        render();
       });
       el.addEventListener('dblclick', e => {
         if (e.target.classList.contains('del')) return;
