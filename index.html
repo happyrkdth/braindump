@@ -323,10 +323,21 @@
   }
 
   .axis-row-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
     overflow: hidden;
+  }
+  .rl-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .06em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    transform-origin: center center;
   }
 
   .quadrant {
@@ -484,13 +495,7 @@
 
     <div class="matrix-grid-wrap">
       <!-- Row 1 -->
-      <div class="axis-row-label">
-        <svg width="24" height="100%" style="width:24px;height:100%;display:block;overflow:visible;">
-          <text x="12" y="50%" dominant-baseline="middle" text-anchor="middle"
-            transform="rotate(-90 12 50%)"
-            style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;fill:#7A7568;">중요</text>
-        </svg>
-      </div>
+      <div class="axis-row-label" id="rl1"><span class="rl-text">중요</span></div>
 
       <div class="quadrant" id="q1" data-q="q1">
         <div class="q-head">
@@ -513,13 +518,7 @@
       </div>
 
       <!-- Row 2 -->
-      <div class="axis-row-label">
-        <svg width="24" height="100%" style="width:24px;height:100%;display:block;overflow:visible;">
-          <text x="12" y="50%" dominant-baseline="middle" text-anchor="middle"
-            transform="rotate(-90 12 50%)"
-            style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;fill:#7A7568;">중요하지 않음</text>
-        </svg>
-      </div>
+      <div class="axis-row-label" id="rl2"><span class="rl-text">중요하지 않음</span></div>
 
       <div class="quadrant" id="q3" data-q="q3">
         <div class="q-head">
