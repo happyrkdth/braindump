@@ -273,6 +273,18 @@
     line-height: 1;
   }
   .chip .del:hover { background: #EEE; color: var(--ink); }
+  .chip.editing { cursor: default; }
+  .chip .edit-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: inherit;
+    padding: 0;
+    min-width: 0;
+  }
 
   /* colored chips inside quadrants */
   .q1-chip { background: var(--q1-chip-bg); border-color: var(--q1-border); color: var(--q1-text); }
@@ -576,6 +588,32 @@
     </div>`;
   }
 
+  function startEdit(chip, taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+    chip.setAttribute('draggable', 'false');
+    chip.classList.add('editing');
+    const textSpan = chip.querySelector('.text');
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'edit-input';
+    input.value = task.text;
+    textSpan.replaceWith(input);
+    input.focus();
+    input.select();
+
+    function commit() {
+      const val = input.value.trim();
+      if (val) task.text = val;
+      render();
+    }
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      if (e.key === 'Escape') { render(); }
+    });
+    input.addEventListener('blur', commit);
+  }
+
   function qColorClass(loc) {
     return { q1:'q1-chip', q2:'q2-chip', q3:'q3-chip', q4:'q4-chip' }[loc] || '';
   }
@@ -583,6 +621,7 @@
   function attachEvents(container, loc) {
     container.querySelectorAll('.chip').forEach(el => {
       el.addEventListener('dragstart', e => {
+        if (el.classList.contains('editing')) { e.preventDefault(); return; }
         dragId = el.dataset.id;
         el.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
@@ -590,6 +629,10 @@
       el.addEventListener('dragend', () => {
         el.classList.remove('dragging');
         dragId = null;
+      });
+      el.addEventListener('dblclick', e => {
+        if (e.target.classList.contains('del')) return;
+        startEdit(el, el.dataset.id);
       });
     });
     container.querySelectorAll('.del').forEach(el => {
